@@ -3,38 +3,42 @@ services:
   # https://caddyserver.com/docs/running#docker-compose
   # https://hub.docker.com/_/caddy
   caddy:
-    container_name: "shinyu-web"
+    container_name: "docker-web"
     image: caddy:2.8.4-alpine
     restart: unless-stopped
     ports:
       - "8000:80"
     volumes:
       - ./conf/Caddyfile:/etc/caddy/Caddyfile
-      - ./site/wordpress:/srv  # Serve wordpress files
-      - ./conf/wp-config.php:/srv/wp-config.php
       - caddy_data:/data
       - caddy_config:/config
     networks:
-      - shinyu-network
+      - docker-network
     depends_on:
-      - php
+      - wordpress
 
-  php:
-    container_name: "shinyu-php"
-    build:
-      dockerfile: "./conf/Dockerfile"
+  # https://hub.docker.com/_/wordpress
+  wordpress:
+    container_name: "docker-wp"
+    image: wordpress:6.7.1-php8.1-fpm-alpine
+    restart: always
+    environment:
+      # TODO: add env variables. or add in a secret/config file
     volumes:
-      - ./site/wordpress:/srv  # Serve wordpress files
+      - wp:/var/www/html
+      - wp_themes:/var/www/html/wp-content/themes
+      - wp_plugins:/var/www/html/wp-content/plugins
     networks:
-      - shinyu-network
+      - docker-network
     depends_on:
       - mariadb
 
   mariadb:
-    container_name: "shinyu-db"
+    container_name: "docker-db"
     image: mariadb:11.6
     restart: always
     environment:
+      # TODO: add env variables. or add in a secret/config file
       MARIADB_HOST: mariadb
       MARIADB_ROOT_PASSWORD: root_password
       MARIADB_DATABASE: wordpress
@@ -44,7 +48,7 @@ services:
       - ./conf/my.conf:/etc/my.conf
       - mariadb_data:/var/lib/mysql
     networks:
-      - shinyu-network
+      - docker-network
 
 volumes:
   caddy_data:
@@ -52,4 +56,4 @@ volumes:
   mariadb_data:
 
 networks:
-  shinyu-network:
+  docker-network:
