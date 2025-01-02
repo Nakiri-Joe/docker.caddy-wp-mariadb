@@ -1,5 +1,5 @@
 
-# Shinyu WP Website Repository
+# Docker managed Caddy-WP-MariaDB Infrastructure
 
-The git repository for the Shinyu WP Website Project.<br>
+The git repository for the Docker managed Caddy-WP-MariaDB Infrastructure.<br>
 Will keep this Markdown updated as necessary.
