@@ -23,7 +23,7 @@ services:
     image: wordpress:6.7.1-php8.1-fpm-alpine
     restart: always
     environment:
-      # TODO: add env variables. or add in a secret/config file
+      - ./conf/wp.env
     volumes:
       - wp:/var/www/html
       - wp_themes:/var/www/html/wp-content/themes
@@ -38,12 +38,7 @@ services:
     image: mariadb:11.6
     restart: always
     environment:
-      # TODO: add env variables. or add in a secret/config file
-      MARIADB_HOST: mariadb
-      MARIADB_ROOT_PASSWORD: root_password
-      MARIADB_DATABASE: wordpress
-      MARIADB_USER: user
-      MARIADB_PASSWORD: password
+      - ./conf/mariadb.env
     volumes:
       - ./conf/my.conf:/etc/my.conf
       - mariadb_data:/var/lib/mysql
@@ -53,6 +48,9 @@ services:
 volumes:
   caddy_data:
   caddy_config:
+  wp:
+  wp_themes:
+  wp_plugins:
   mariadb_data:
 
 networks:
