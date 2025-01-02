@@ -23,7 +23,7 @@ services:
     container_name: "docker-wp"
     image: wordpress:6.7.1-php8.1-fpm-alpine
     restart: always
-    environment:
+    env_file:
       - ./conf/wp.env
     secrets:
       - wp_keys
@@ -41,7 +41,7 @@ services:
     container_name: "docker-db"
     image: mariadb:11.6
     restart: always
-    environment:
+    env_file:
       - ./conf/mariadb.env
     volumes:
       - ./conf/my.conf:/etc/my.conf
