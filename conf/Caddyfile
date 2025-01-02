@@ -1,0 +1,11 @@
+{
+    debug
+    admin off
+}
+
+localhost:80 {
+    root * /var/www/html
+    encode gzip zstd
+    php_fastcgi unix//run/php/php-8.1-fpm.sock
+    file_server
+}
