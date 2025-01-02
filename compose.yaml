@@ -1,0 +1,55 @@
+services:
+  # References listed below:
+  # https://caddyserver.com/docs/running#docker-compose
+  # https://hub.docker.com/_/caddy
+  caddy:
+    container_name: "shinyu-web"
+    image: caddy:2.8.4-alpine
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./conf/Caddyfile:/etc/caddy/Caddyfile
+      - ./site/wordpress:/srv  # Serve wordpress files
+      - ./conf/wp-config.php:/srv/wp-config.php
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - shinyu-network
+    depends_on:
+      - php
+
+  php:
+    container_name: "shinyu-php"
+    build:
+      dockerfile: "./conf/Dockerfile"
+    volumes:
+      - ./site/wordpress:/srv  # Serve wordpress files
+    networks:
+      - shinyu-network
+    depends_on:
+      - mariadb
+
+  mariadb:
+    container_name: "shinyu-db"
+    image: mariadb:11.6
+    restart: always
+    environment:
+      MARIADB_HOST: mariadb
+      MARIADB_ROOT_PASSWORD: root_password
+      MARIADB_DATABASE: wordpress
+      MARIADB_USER: user
+      MARIADB_PASSWORD: password
+    volumes:
+      - ./conf/my.conf:/etc/my.conf
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - shinyu-network
+
+volumes:
+  caddy_data:
+  caddy_config:
+  mariadb_data:
+
+networks:
+  shinyu-network:
