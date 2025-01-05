@@ -1,0 +1,16 @@
+
+# Reference:
+# https://developer.wordpress.org/apis/wp-config-php/#security-keys
+# https://hub.docker.com/_/wordpress#
+# 
+# The following secret variables are used to configure WP instance
+# TODO: PLEASE EDIT SECURITY KEYS!!!
+
+AUTH_KEY            = ""
+SECURE_AUTH_KEY     = ""
+LOGGED_IN_KEY       = ""
+NONCE_KEY           = ""
+AUTH_SALT           = ""
+SECURE_AUTH_SALT    = ""
+LOGGED_IN_SALT      = ""
+NONCE_SALT          = ""

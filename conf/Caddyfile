@@ -1,0 +1,11 @@
+{
+    debug
+    admin off
+}
+
+localhost:80 {
+    root * /var/www/html
+    encode gzip zstd
+    php_fastcgi wordpress:9000
+    file_server
+}

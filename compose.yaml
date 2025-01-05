@@ -1,0 +1,71 @@
+services:
+  # References listed below:
+  # https://caddyserver.com/docs/running#docker-compose
+  # https://hub.docker.com/_/caddy
+  caddy:
+    container_name: "docker-web"
+    image: caddy:2.8.4-alpine
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./conf/Caddyfile:/etc/caddy/Caddyfile
+      # Need to mount wordpress files into caddy
+      # https://caddy.community/t/caddy-with-wordpress-404-on-static-assets/17431/2
+      - wp:/var/www/html
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - docker-network
+    depends_on:
+      - wordpress
+
+
+  # https://hub.docker.com/_/wordpress
+  wordpress:
+    container_name: "docker-wp"
+    image: wordpress:6.7.1-php8.1-fpm-alpine
+    restart: always
+    env_file:
+      - ./conf/wp.env
+    secrets:
+      - wp_keys
+    volumes:
+      - wp:/var/www/html
+      - wp_themes:/var/www/html/wp-content/themes
+      - wp_plugins:/var/www/html/wp-content/plugins
+    networks:
+      - docker-network
+    depends_on:
+      - mariadb
+
+
+  mariadb:
+    container_name: "docker-db"
+    image: mariadb:11.6
+    restart: always
+    env_file:
+      - ./conf/mariadb.env
+    volumes:
+      - ./conf/my.conf:/etc/my.conf
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - docker-network
+
+
+secrets:
+  wp_keys:
+    file: ./conf/wp_keys.txt
+
+
+volumes:
+  caddy_data:
+  caddy_config:
+  wp:
+  wp_themes:
+  wp_plugins:
+  mariadb_data:
+
+
+networks:
+  docker-network:
