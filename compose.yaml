@@ -32,6 +32,7 @@ services:
       - wp_keys
     volumes:
       - wp:/var/www/html
+      - ./conf/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     networks:
       - docker-network
     depends_on:
