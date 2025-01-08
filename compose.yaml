@@ -32,8 +32,6 @@ services:
       - wp_keys
     volumes:
       - wp:/var/www/html
-      - wp_themes:/var/www/html/wp-content/themes
-      - wp_plugins:/var/www/html/wp-content/plugins
     networks:
       - docker-network
     depends_on:
